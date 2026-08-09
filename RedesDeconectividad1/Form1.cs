@@ -15,7 +15,7 @@ namespace RedesDeConectividad
     /// y elevar matrices) vive aparte, en esa otra clase, para no mezclar
     /// interfaz con lógica.
     /// </summary>
-    public partial class Form1 : Form
+    public partial class frmRedesDeConectividad : Form
     {
         // Tamaño de la red (número de servidores/nodos). Si se necesita
         // ampliar la red a más servidores, basta con cambiar este valor
@@ -23,7 +23,7 @@ namespace RedesDeConectividad
         private const int TamanoMatriz = 4;
         private readonly string[] nombresServidores = { "S1", "S2", "S3", "S4" };
 
-        public Form1()
+        public frmRedesDeConectividad()
         {
             InitializeComponent();
         }
@@ -285,6 +285,11 @@ namespace RedesDeConectividad
                 "CONCLUSIÓN DEL ANÁLISIS:" + Environment.NewLine +
                 $"Existen exactamente {cantidadRutas} {plural} de {n} {pluralSalto} " +
                 $"desde el Servidor {nombresServidores[origen]} hasta el Servidor {nombresServidores[destino]}.";
+        }
+
+        private void toolTipAyuda_Popup(object sender, PopupEventArgs e)
+        {
+
         }
     }
 }
