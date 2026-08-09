@@ -7,19 +7,16 @@ using System.Windows.Forms;
 
 namespace RedesDeConectividad
 {
-    /// <summary>
-    /// Formulario principal del proyecto. Se encarga únicamente de la
-    /// interacción con el usuario: leer lo que escribió en la grilla,
-    /// mandarlo a calcular a <see cref="OperacionesMatriciales"/> y
-    /// mostrar el resultado. La operación matemática en sí (multiplicar
-    /// y elevar matrices) vive aparte, en esa otra clase, para no mezclar
-    /// interfaz con lógica.
-    /// </summary>
+
+    // Ventana principal de la aplicación encargada de la interacción con el usuario. 
+    // Recibe la matriz de adyacencia desde la interfaz, solicita su potenciación a 
+    // <see cref="OperacionesMatriciales"/> y muestra las salidas correspondientes, 
+    // manteniendo la lógica matemática completamente independiente de la interfaz gráfica.
+
     public partial class frmRedesDeConectividad : Form
     {
-        // Tamaño de la red (número de servidores/nodos). Si se necesita
-        // ampliar la red a más servidores, basta con cambiar este valor
-        // y la lista de nombres de abajo.
+        // Define la dimensión de la red (número de nodos/servidores). Modificar esta constante
+        // junto al arreglo de nombres permite escalar la red de forma dinámica.
         private const int TamanoMatriz = 4;
         private readonly string[] nombresServidores = { "S1", "S2", "S3", "S4" };
 
@@ -35,10 +32,10 @@ namespace RedesDeConectividad
             ConfigurarCombos();
         }
 
-        /// <summary>
-        /// Configura las columnas, encabezados y valores iniciales del
-        /// DataGridView donde el usuario ingresa la matriz de adyacencia.
-        /// </summary>
+        
+        // Configura las columnas, encabezados y valores iniciales del
+        // DataGridView donde el usuario ingresa la matriz de adyacencia.
+        
         private void ConfigurarGridEntrada()
         {
             dgvMatrizEntrada.ColumnCount = TamanoMatriz;
@@ -74,10 +71,10 @@ namespace RedesDeConectividad
             }
         }
 
-        /// <summary>
-        /// Configura las columnas y encabezados del DataGridView de solo
-        /// lectura donde se muestra la matriz resultado (A elevada a N).
-        /// </summary>
+       
+        // Configura las columnas y encabezados del DataGridView de solo
+        // lectura donde se muestra la matriz resultado (A elevada a N).
+       
         private void ConfigurarGridResultado()
         {
             dgvResultado.ColumnCount = TamanoMatriz;
@@ -97,10 +94,10 @@ namespace RedesDeConectividad
             }
         }
 
-        /// <summary>
-        /// Llena los combos de origen y destino con los nombres de los
-        /// servidores definidos en el arreglo <see cref="nombresServidores"/>.
-        /// </summary>
+
+         //Población inicial de los controles ComboBox(origen y destino)
+         // utilizando los identificadores definidos en el arreglo de servidores.
+
         private void ConfigurarCombos()
         {
             cmbOrigen.Items.Clear();
@@ -116,13 +113,13 @@ namespace RedesDeConectividad
             cmbDestino.SelectedIndex = TamanoMatriz - 1;
         }
 
-        /// <summary>
-        /// Se dispara cuando el DataGridView muestra el control de edición
-        /// de una celda (un TextBox interno). Aquí se le engancha el
-        /// filtro de teclas para que, mientras el usuario escribe, no se
-        /// puedan ingresar caracteres distintos de 0 y 1, ni un segundo
-        /// dígito una vez que la celda ya tiene uno.
-        /// </summary>
+        
+        // Se dispara cuando el DataGridView muestra el control de edición
+        // de una celda (un TextBox interno). Aquí se le engancha el
+        // filtro de teclas para que, mientras el usuario escribe, no se
+        // puedan ingresar caracteres distintos de 0 y 1, ni un segundo
+        // dígito una vez que la celda ya tiene uno.
+        
         private void dgvMatrizEntrada_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
             if (e.Control is TextBox editor)
@@ -132,13 +129,13 @@ namespace RedesDeConectividad
             }
         }
 
-        /// <summary>
-        /// Filtro de teclado para las celdas de la matriz: solo deja pasar
-        /// las teclas de control (borrar, flechas, tab, etc.) y los
-        /// caracteres '0' y '1'. Además, si la celda ya tiene un dígito y
-        /// no hay texto seleccionado, bloquea un segundo carácter para que
-        /// nunca se pueda formar algo como "10" o "11".
-        /// </summary>
+        
+        // Filtro de teclado para las celdas de la matriz: solo deja pasar
+        // las teclas de control (borrar, flechas, tab, etc.) y los
+        // caracteres '0' y '1'. Además, si la celda ya tiene un dígito y
+        // no hay texto seleccionado, bloquea un segundo carácter para que
+        // nunca se pueda formar algo como "10" o "11".
+        
         private void CeldaMatriz_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (char.IsControl(e.KeyChar))
@@ -158,13 +155,13 @@ namespace RedesDeConectividad
             }
         }
 
-        /// <summary>
-        /// Validación de respaldo: cubre los casos que el filtro de teclas
-        /// no puede evitar, como pegar texto con Ctrl+V o dejar la celda
-        /// vacía. Si el valor final no es exactamente "0" o "1", se
-        /// cancela la edición, se marca la fila con un ícono de error y la
-        /// celda no se puede abandonar hasta corregirla.
-        /// </summary>
+        
+        // Validación de respaldo: cubre los casos que el filtro de teclas
+        // no puede evitar, como pegar texto con Ctrl+V o dejar la celda
+        // vacía. Si el valor final no es exactamente "0" o "1", se
+        // cancela la edición, se marca la fila con un ícono de error y la
+        // celda no se puede abandonar hasta corregirla.
+        
         private void dgvMatrizEntrada_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             string valor = e.FormattedValue?.ToString().Trim();
@@ -180,20 +177,20 @@ namespace RedesDeConectividad
             }
         }
 
-        /// <summary>
-        /// Limpia el ícono de error de la fila una vez que la celda quedó
-        /// con un valor válido.
-        /// </summary>
+        
+        // Limpia el ícono de error de la fila una vez que la celda quedó
+        // con un valor válido.
+        
         private void dgvMatrizEntrada_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             dgvMatrizEntrada.Rows[e.RowIndex].ErrorText = string.Empty;
         }
 
-        /// <summary>
-        /// Evento del botón "Calcular Aⁿ": lee la matriz ingresada por el
-        /// usuario, calcula su potencia N y muestra tanto la matriz
-        /// resultante como la interpretación puntual de la ruta consultada.
-        /// </summary>
+        
+        // Evento del botón "Calcular Aⁿ": lee la matriz ingresada por el
+        // usuario, calcula su potencia N y muestra tanto la matriz
+        // resultante como la interpretación puntual de la ruta consultada.
+        
         private void btnCalcular_Click(object sender, EventArgs e)
         {
             try
@@ -218,11 +215,11 @@ namespace RedesDeConectividad
             }
         }
 
-        /// <summary>
-        /// Recorre el DataGridView de entrada y arma la matriz de enteros
-        /// que usará el motor de cálculo, validando que cada celda
-        /// contenga únicamente 0 o 1.
-        /// </summary>
+        
+        // Recorre el DataGridView de entrada y arma la matriz de enteros
+        // que usará el motor de cálculo, validando que cada celda
+        // contenga únicamente 0 o 1.
+        
         private int[,] LeerMatrizDesdeGrid()
         {
             int[,] matriz = new int[TamanoMatriz, TamanoMatriz];
@@ -252,9 +249,9 @@ namespace RedesDeConectividad
             return matriz;
         }
 
-        /// <summary>
-        /// Vuelca la matriz calculada en el DataGridView de resultado.
-        /// </summary>
+
+        // Muestra los valores de la matriz resultante en el DataGridView de salida.
+
         private void MostrarResultadoEnGrid(int[,] matriz)
         {
             for (int i = 0; i < TamanoMatriz; i++)
@@ -266,11 +263,10 @@ namespace RedesDeConectividad
             }
         }
 
-        
-        /// Muestra el mensaje de conclusión con la cantidad exacta de rutas
-        /// encontradas entre el servidor origen y el servidor destino
-        /// seleccionados en los combos.
-        
+
+         // Procesa y muestra en pantalla el análisis detallado con la cantidad exacta 
+        // de rutas encontradas entre el servidor de origen y el de destino seleccionados.
+
         private void MostrarConclusion(int[,] matrizPotencia, int n)
         {
             int origen = cmbOrigen.SelectedIndex;
